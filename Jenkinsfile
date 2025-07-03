@@ -31,7 +31,7 @@ pipeline {
         
         stage('Trivy FS Scan') {
             steps {
-                sh "trivy fs --format table -o fs.html ."
+                bat "trivy fs --format table -o fs.html ."
             }
         }
         
@@ -39,7 +39,7 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'dockerhub') {
-                        sh "docker build -t ${IMAGE_NAME}:${TAG} ."
+                        bat "docker build -t ${IMAGE_NAME}:${TAG} ."
                     }
                 }
             }
@@ -47,7 +47,7 @@ pipeline {
         
         stage('Trivy Image Scan') {
             steps {
-                sh "trivy image --format table -o image.html ${IMAGE_NAME}:${TAG}"
+                bat "trivy image --format table -o image.html ${IMAGE_NAME}:${TAG}"
             }
         }
         
@@ -55,7 +55,7 @@ pipeline {
             steps {
                 script {
                     withDockerRegistry(credentialsId: 'dockerhub') {
-                        sh "docker push ${IMAGE_NAME}:${TAG}"
+                        bat "docker push ${IMAGE_NAME}:${TAG}"
                     }
                 }
             }
@@ -65,7 +65,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([file(credentialsId: 'kube-config', variable: 'kube-config')]) {
-                        sh "kubectl apply -f mysql-ds.yml -n ${KUBE_NAMESPACE}"  // Ensure you have the MySQL deployment YAML ready
+                        bat "kubectl apply -f mysql-ds.yml -n ${KUBE_NAMESPACE}"  // Ensure you have the MySQL deployment YAML ready
                     }
                 }
             }
@@ -75,7 +75,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([file(credentialsId: 'kube-config', variable: 'kube-config')]) {
-                        sh """ if ! kubectl get svc bankapp-service -n ${KUBE_NAMESPACE}; then
+                        bat """ if ! kubectl get svc bankapp-service -n ${KUBE_NAMESPACE}; then
                                 kubectl apply -f bankapp-service.yml -n ${KUBE_NAMESPACE}
                               fi
                         """
@@ -95,7 +95,7 @@ pipeline {
                     }
 
                     withCredentials([file(credentialsId: 'kube-config', variable: 'kube-config')]) {
-                        sh "kubectl apply -f ${deploymentFile} -n ${KUBE_NAMESPACE}"
+                        bat "kubectl apply -f ${deploymentFile} -n ${KUBE_NAMESPACE}"
                     }
                 }
             }
@@ -111,7 +111,7 @@ pipeline {
 
                     // Always switch traffic based on DEPLOY_ENV
                     withCredentials([file(credentialsId: 'kube-config', variable: 'kube-config')]) {
-                        sh '''
+                        bat '''
                             kubectl patch service bankapp-service -p "{\\"spec\\": {\\"selector\\": {\\"app\\": \\"bankapp\\", \\"version\\": \\"''' + newEnv + '''\\"}}}" -n ${KUBE_NAMESPACE}
                         '''
                     }
@@ -125,7 +125,7 @@ pipeline {
                 script {
                     def verifyEnv = params.DEPLOY_ENV
                     withCredentials([file(credentialsId: 'kube-config', variable: 'kube-config')]) {
-                        sh """
+                        bat """
                         kubectl get pods -l version=${verifyEnv} -n ${KUBE_NAMESPACE}
                         kubectl get svc bankapp-service -n ${KUBE_NAMESPACE}
                         """
