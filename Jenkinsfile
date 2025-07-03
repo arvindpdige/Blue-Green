@@ -152,6 +152,9 @@ pipeline {
         }
     }
     post {
-        cleanWs()
+        always{
+            echo '....Cleaning Workspace....'
+            cleanWs()
+        }
     }
 }
