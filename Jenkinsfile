@@ -129,7 +129,7 @@ pipeline {
                     // Always switch traffic based on DEPLOY_ENV
                     withCredentials([file(credentialsId: 'kube-config', variable: 'kube-config')]) {
                         bat '''
-                            kubectl patch service bankapp-service -p "{\\"spec\\": {\\"selector\\": {\\"app\\": \\"bankapp\\", \\"version\\": \\"''' + newEnv + '''\\"}}}" -n ${KUBE_NAMESPACE}
+                            kubectl patch service bankapp-service -p "{\\"spec\\": {\\"selector\\": {\\"app\\": \\"bankapp\\", \\"version\\": \\"''' + newEnv + '''\\"}}}" -n "${KUBE_NAMESPACE}"
                         '''
                     }
                     echo "Traffic has been switched to the ${newEnv} environment."
