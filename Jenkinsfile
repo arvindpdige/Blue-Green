@@ -151,4 +151,7 @@ pipeline {
             }
         }
     }
+    post {
+        cleanWs()
+    }
 }
