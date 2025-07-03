@@ -1,5 +1,9 @@
 pipeline {
     agent any
+
+    tool {
+        maven 'maven3.9.1'
+    }
     
     parameters {
         choice(name: 'DEPLOY_ENV', choices: ['blue', 'green'], description: 'Choose which environment to deploy: Blue or Green')
@@ -20,6 +24,7 @@ pipeline {
                 git branch: 'main', credentialsId: 'git-token', url: 'https://github.com/arvindpdige/Blue-Green.git'
             }
         }
+
         
         // stage('SonarQube Analysis') {
         //     steps {
@@ -29,6 +34,13 @@ pipeline {
         //     }
         // }
         
+        stage('Build') {
+            steps {
+                    bat 'mvn clean compile install package'
+                }
+            }
+        }
+
         stage('Trivy FS Scan') {
             steps {
                 bat "trivy fs --format table -o fs.html ."
