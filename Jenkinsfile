@@ -86,9 +86,15 @@ pipeline {
             steps {
                 script {
                     withCredentials([file(credentialsId: 'kube-config', variable: 'kube-config')]) {
-                        bat """ if ! kubectl get svc bankapp-service -n ${KUBE_NAMESPACE}; then
+                        // bat """ if ! kubectl get svc bankapp-service -n ${KUBE_NAMESPACE}; then
+                        //         kubectl apply -f bankapp-service.yml -n ${KUBE_NAMESPACE}
+                        //       fi
+                        // """
+                        bat """
+                            kubectl get svc bankapp-service -n ${KUBE_NAMESPACE} >nul 2>&1
+                            IF ERRORLEVEL 1 (
                                 kubectl apply -f bankapp-service.yml -n ${KUBE_NAMESPACE}
-                              fi
+                            )
                         """
                    }
                 }
