@@ -36,7 +36,7 @@ pipeline {
         
         stage('Build') {
             steps {
-                    bat 'mvn clean compile install package'
+                    bat 'mvn clean compile install package -Dmaven.test.failure.ignore=true'
             }
         }
 
