@@ -13,9 +13,9 @@ pipeline {
     
     environment {
         IMAGE_NAME = "arvindpdige/bankapp"
-        TAG = "${params.DOCKER_TAG}"  // The image tag now comes from the parameter
+        TAG = "${params.DOCKER_TAG}"  
         KUBE_NAMESPACE = 'prod'
-        // SCANNER_HOME= tool 'sonar-scanner'
+       
     }
 
     stages {
@@ -76,7 +76,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([file(credentialsId: 'kube-config', variable: 'kube-config')]) {
-                        bat "kubectl apply -f mysql-ds.yml -n ${KUBE_NAMESPACE}"  // Ensure you have the MySQL deployment YAML ready
+                        bat "kubectl apply -f mysql-ds.yml -n ${KUBE_NAMESPACE}"  
                     }
                 }
             }
@@ -86,11 +86,7 @@ pipeline {
             steps {
                 script {
                     withCredentials([file(credentialsId: 'kube-config', variable: 'kube-config')]) {
-                        // bat """ if ! kubectl get svc bankapp-service -n ${KUBE_NAMESPACE}; then
-                        //         kubectl apply -f bankapp-service.yml -n ${KUBE_NAMESPACE}
-                        //       fi
-                        // """
-                        bat """
+                       bat """
                             kubectl get svc bankapp-service -n ${KUBE_NAMESPACE} >nul 2>&1
                             IF ERRORLEVEL 1 (
                                 kubectl apply -f bankapp-service.yml -n ${KUBE_NAMESPACE}
