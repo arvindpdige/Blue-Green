@@ -95,6 +95,7 @@ pipeline:
                 - AllErrors
               action:
                 type: StageRollback
+        gitOpsEnabled: false
   variables:
     - name: tag
       type: String
