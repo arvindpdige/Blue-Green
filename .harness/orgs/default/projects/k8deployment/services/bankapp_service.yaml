@@ -23,11 +23,11 @@ service:
               skipResourceVersioning: false
               enableDeclarativeRollback: false
       variables:
-        - name: tag
+        - name: TAG
           type: String
           description: ""
           required: true
-          value: blue
+          value: green
         - name: ns
           type: String
           description: ""
