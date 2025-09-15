@@ -43,6 +43,27 @@ pipeline:
                       mvn clean compile install package -Dmaven.test.failure.ignore=true
                     imagePullPolicy: IfNotPresent
               - step:
+                  type: AquaTrivy
+                  name: AquaTrivy_1
+                  identifier: AquaTrivy_1
+                  spec:
+                    mode: orchestration
+                    config: default
+                    target:
+                      type: container
+                      detection: auto
+                    advanced:
+                      log:
+                        level: info
+                    privileged: true
+                    imagePullPolicy: IfNotPresent
+                    connectorRef: account.Dockerhub
+                    image:
+                      type: docker_v2
+                      tag: <+pipeline.variables.TAG>
+                      name: arvindpdige/bankapp
+                      domain: docker.io
+              - step:
                   type: BuildAndPushDockerRegistry
                   name: BuildAndPushArtifact
                   identifier: BuildAndPushArtifact
