@@ -32,6 +32,18 @@ pipeline:
           execution:
             steps:
               - step:
+                  type: Run
+                  name: artifact_Build
+                  identifier: artifact_Build
+                  spec:
+                    connectorRef: account.Dockerhub
+                    image: maven:3.9.1-openjdk-8-slim
+                    shell: Sh
+                    command: |-
+                      mvn -v
+                      mvn clean compile install package -Dmaven.test.failure.ignore=true
+                    imagePullPolicy: IfNotPresent
+              - step:
                   type: BuildAndPushDockerRegistry
                   name: BuildAndPushBankapp
                   identifier: BuildAndPushBankapp
