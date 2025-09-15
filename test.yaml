@@ -1,1 +1,1 @@
-TAG = <+pipeline.variables.TAG>
+TAG: <+pipeline.variables.TAG>
