@@ -22,6 +22,18 @@ service:
                 - patch.yaml
               skipResourceVersioning: false
               enableDeclarativeRollback: false
+        - manifest:
+            identifier: patch
+            type: KustomizePatches
+            spec:
+              store:
+                type: Github
+                spec:
+                  connectorRef: gitarvibankapp
+                  gitFetchType: Branch
+                  paths:
+                    - patch.yaml
+                  branch: main
       variables:
         - name: TAG
           type: String
