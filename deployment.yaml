@@ -68,7 +68,7 @@ spec:
     spec:
       containers:
       - name: bankapp
-        image: arvindpdige/bankapp:<+pipeline.variables.TAG> # Adjust the image tag for the blue version
+        image: arvindpdige/bankapp:{{ .Values.TAG }} # Adjust the image tag for the blue version
         ports:
         - containerPort: 8080
         env:
