@@ -59,12 +59,12 @@ spec:
   selector:
     matchLabels:
       app: bankapp
-      version: <+pipeline.variables.tag>
+      harness.io/color: blue
   template:
     metadata:
       labels:
         app: bankapp
-        version: <+pipeline.variables.tag>
+        harness.io/color: blue
     spec:
       containers:
       - name: bankapp
@@ -100,7 +100,7 @@ spec:
     targetPort: 8080
   selector:
     app: bankapp
-    version: <+pipeline.variables.tag> # This can be changed to "green" when switching traffic
+    harness.io/color: blue
 ---
 # BankApp service
 apiVersion: v1
@@ -116,4 +116,4 @@ spec:
     targetPort: 8080
   selector:
     app: bankapp
-    version: <+pipeline.variables.tag> # This can be changed to "green" when switching traffic
+    harness.io/color: blue
