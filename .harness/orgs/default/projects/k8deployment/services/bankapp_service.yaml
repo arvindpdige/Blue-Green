@@ -1,0 +1,35 @@
+service:
+  name: bankapp_service
+  identifier: bankapp_service
+  serviceDefinition:
+    type: Kubernetes
+    spec:
+      manifests:
+        - manifest:
+            identifier: k8
+            type: K8sManifest
+            spec:
+              store:
+                type: Github
+                spec:
+                  connectorRef: account.Github
+                  gitFetchType: Branch
+                  paths:
+                    - deployment.yaml
+                  branch: main
+              skipResourceVersioning: false
+              enableDeclarativeRollback: false
+      variables:
+        - name: tag
+          type: String
+          description: ""
+          required: true
+          value: blue
+        - name: ns
+          type: String
+          description: ""
+          required: true
+          value: prod
+  gitOpsEnabled: false
+  orgIdentifier: default
+  projectIdentifier: k8deployment
