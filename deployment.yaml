@@ -53,7 +53,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: bankapp-<+pipeline.variables.tag.toLower()>
+  name: bankapp
 spec:
   replicas: 1
   selector:
@@ -68,7 +68,7 @@ spec:
     spec:
       containers:
       - name: bankapp
-        image: arvindpdige/bankapp:<+pipeline.variables.tag.toLower()> # Adjust the image tag for the blue version
+        image: arvindpdige/bankapp:<+pipeline.variables.tag> # Adjust the image tag for the blue version
         ports:
         - containerPort: 8080
         env:
