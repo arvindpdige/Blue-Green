@@ -1,0 +1,49 @@
+pipeline:
+  name: Bankapp
+  identifier: Bankapp
+  projectIdentifier: k8deployment
+  orgIdentifier: default
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: account.Github
+        repoName: Blue-Green
+        build: <+input>
+  stages:
+    - stage:
+        name: Build
+        identifier: Build
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          caching:
+            enabled: true
+            override: true
+          buildIntelligence:
+            enabled: true
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Docker
+            spec: {}
+          execution:
+            steps:
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: BuildAndPushBankapp
+                  identifier: BuildAndPushBankapp
+                  spec:
+                    connectorRef: account.Dockerhub
+                    repo: arvindpdige/bankapp
+                    tags:
+                      - <+pipeline.variables.tag>
+                    caching: true
+  variables:
+    - name: tag
+      type: String
+      description: ""
+      required: true
+      value: blue
