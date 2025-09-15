@@ -23,8 +23,8 @@ service:
               skipResourceVersioning: false
               enableDeclarativeRollback: false
         - manifest:
-            identifier: patch
-            type: KustomizePatches
+            identifier: test
+            type: Values
             spec:
               store:
                 type: Github
@@ -32,14 +32,14 @@ service:
                   connectorRef: gitarvibankapp
                   gitFetchType: Branch
                   paths:
-                    - patch.yaml
+                    - test.yaml
                   branch: main
       variables:
         - name: TAG
           type: String
           description: ""
           required: true
-          value: green
+          value: <+pipeline.variables.TAG>
         - name: ns
           type: String
           description: ""
