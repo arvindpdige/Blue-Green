@@ -151,7 +151,7 @@ pipeline:
       type: String
       description: ""
       required: true
-      value: v1
+      value: v2
     - name: ns
       type: String
       description: ""
