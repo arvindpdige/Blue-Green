@@ -1,0 +1,65 @@
+pipeline:
+  name: canary
+  identifier: canary
+  projectIdentifier: k8deployment
+  orgIdentifier: default
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: gitarvibankapp
+        build: <+input>
+  stages:
+    - stage:
+        name: Build
+        identifier: Build
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          caching:
+            enabled: true
+            override: true
+          buildIntelligence:
+            enabled: true
+          platform:
+            os: Linux
+            arch: Amd64
+          runtime:
+            type: Docker
+            spec: {}
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Artifact_Build
+                  identifier: Artifact_Build
+                  spec:
+                    connectorRef: account.Dockerhub
+                    image: maven:3-openjdk-17
+                    shell: Sh
+                    command: |-
+                      mvn -v
+                      mvn clean compile install package -Dmaven.test.failure.ignore=true
+                    imagePullPolicy: IfNotPresent
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: BuildAndPushArtifact
+                  identifier: BuildAndPushArtifact
+                  spec:
+                    connectorRef: account.Dockerhub
+                    repo: arvindpdige/bankapp
+                    tags:
+                      - <+pipeline.variables.TAG>
+                    caching: true
+  variables:
+    - name: TAG
+      type: String
+      description: ""
+      required: true
+      value: v1
+    - name: ns
+      type: String
+      description: ""
+      required: true
+      value: prod
