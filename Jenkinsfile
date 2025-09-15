@@ -77,7 +77,6 @@ pipeline {
                 script {
                     withCredentials([file(credentialsId: 'kube-config', variable: 'kube-config')]) {
                         bat 'setx KUBECONFIG C:\\Users\\Administrator\\.kube\\config'
-                        bat 'kubectl create ns prod'
                         bat "kubectl apply -f mysql-ds.yml -n ${KUBE_NAMESPACE}"  
                     }
                 }
