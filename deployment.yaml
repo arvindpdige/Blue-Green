@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bankapp-<+pipeline.variables.tag>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bankapp
+      version: <+pipeline.variables.tag>
+  template:
+    metadata:
+      labels:
+        app: bankapp
+        version: <+pipeline.variables.tag>
+    spec:
+      containers:
+      - name: bankapp
+        image: arvindpdige/bankapp:<+pipeline.variables.tag> # Adjust the image tag for the blue version
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:mysql://mysql-service:3306/bankappdb?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+        - name: SPRING_DATASOURCE_USERNAME
+          value: root
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: Test@123
+        resources:
+          requests:
+            memory: "500Mi"
+            cpu: "300m"
+          limits:
+            memory: "1000Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bankapp-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: bankapp
+    version: <+pipeline.variables.tag> # This can be changed to "green" when switching traffic
