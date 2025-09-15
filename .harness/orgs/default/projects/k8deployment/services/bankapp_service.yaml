@@ -18,6 +18,8 @@ service:
                     - deployment.yaml
                   repoName: Blue-Green
                   branch: main
+              valuesPaths:
+                - patch.yaml
               skipResourceVersioning: false
               enableDeclarativeRollback: false
       variables:
