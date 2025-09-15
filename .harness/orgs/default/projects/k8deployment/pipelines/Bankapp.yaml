@@ -37,7 +37,7 @@ pipeline:
                   identifier: artifact_Build
                   spec:
                     connectorRef: account.Dockerhub
-                    image: maven:3.9.1-openjdk-8-slim
+                    image: maven:3-openjdk-17
                     shell: Sh
                     command: |-
                       mvn -v
