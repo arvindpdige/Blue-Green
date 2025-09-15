@@ -54,40 +54,45 @@ pipeline:
                       - <+pipeline.variables.tag>
                     caching: true
     - stage:
-        name: Deploy
-        identifier: Deploy
+        name: BankApp
+        identifier: BankApp
         description: ""
         type: Deployment
         spec:
           deploymentType: Kubernetes
-          gitOpsEnabled: true
           service:
-            serviceRef: k8
+            serviceRef: bankapp_service
+            gitBranch: main
+          environment:
+            environmentRef: account.minikube
+            deployToAll: false
+            infrastructureDefinitions:
+              - identifier: miniInfra
           execution:
             steps:
               - step:
-                  type: GitOpsUpdateReleaseRepo
-                  name: Update Release Repo
-                  identifier: updateReleaseRepo
+                  name: Stage Deployment
+                  identifier: stageDeployment
+                  type: K8sBlueGreenDeploy
                   timeout: 10m
-                  spec: {}
-              - step:
-                  type: MergePR
-                  name: Merge PR
-                  identifier: mergePR
                   spec:
-                    deleteSourceBranch: true
-                  timeout: 10m
+                    skipDryRun: false
+                    pruningEnabled: false
               - step:
-                  type: GitOpsFetchLinkedApps
-                  name: Fetch Linked Apps
-                  identifier: fetchLinkedApps
+                  name: Swap primary with stage service
+                  identifier: bgSwapServices
+                  type: K8sBGSwapServices
                   timeout: 10m
-                  spec: {}
-            rollbackSteps: []
-          environment:
-            environmentRef: account.minikube
-            deployToAll: true
+                  spec:
+                    skipDryRun: false
+            rollbackSteps:
+              - step:
+                  name: Swap primary with stage service
+                  identifier: rollbackBgSwapServices
+                  type: K8sBGSwapServices
+                  timeout: 10m
+                  spec:
+                    skipDryRun: false
         tags: {}
         failureStrategies:
           - onFailure:
@@ -95,7 +100,17 @@ pipeline:
                 - AllErrors
               action:
                 type: StageRollback
-        gitOpsEnabled: false
+        variables:
+          - name: tag
+            type: String
+            description: ""
+            required: true
+            value: blue
+          - name: ns
+            type: String
+            description: ""
+            required: true
+            value: prod
   variables:
     - name: tag
       type: String
