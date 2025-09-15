@@ -18,7 +18,7 @@ service:
                     - deployment.yaml
                   repoName: Blue-Green
                   branch: main
-              patchesPaths:
+              valuesPaths:
                 - patch.yaml
               skipResourceVersioning: false
               enableDeclarativeRollback: false
