@@ -52,6 +52,100 @@ pipeline:
                     tags:
                       - <+pipeline.variables.TAG>
                     caching: true
+    - stage:
+        name: canary
+        identifier: canary
+        description: ""
+        type: Deployment
+        spec:
+          deploymentType: Kubernetes
+          service:
+            serviceRef: bankapp_service
+          environment:
+            environmentRef: account.minikube
+            deployToAll: false
+            infrastructureDefinitions:
+              - identifier: miniInfra
+          execution:
+            steps:
+              - stepGroup:
+                  name: Canary Deployment
+                  identifier: canaryDeployment
+                  steps:
+                    - step:
+                        name: Canary Deployment
+                        identifier: canaryDeployment
+                        type: K8sCanaryDeploy
+                        timeout: 10m
+                        spec:
+                          instanceSelection:
+                            spec:
+                              percentage: 50
+                            type: Percentage
+                          skipDryRun: false
+                    - step:
+                        type: HarnessApproval
+                        name: HarnessApproval_1
+                        identifier: HarnessApproval_1
+                        spec:
+                          approvalMessage: Please review the following information and approve the pipeline progression
+                          includePipelineExecutionHistory: true
+                          isAutoRejectEnabled: false
+                          approvers:
+                            userGroups:
+                              - account._account_all_users
+                            minimumCount: 1
+                            disallowPipelineExecutor: false
+                          approverInputs: []
+                        timeout: 1d
+                    - step:
+                        type: K8sCanaryDeploy
+                        name: K8sCanaryDeploy_1
+                        identifier: K8sCanaryDeploy_1
+                        spec:
+                          skipDryRun: false
+                          instanceSelection:
+                            spec:
+                              percentage: 100
+                            type: Percentage
+                        timeout: 10m
+                    - step:
+                        name: Canary Delete
+                        identifier: canaryDelete
+                        type: K8sCanaryDelete
+                        timeout: 10m
+                        spec: {}
+              - stepGroup:
+                  name: Primary Deployment
+                  identifier: primaryDeployment
+                  steps:
+                    - step:
+                        name: Rolling Deployment
+                        identifier: rollingDeployment
+                        type: K8sRollingDeploy
+                        timeout: 10m
+                        spec:
+                          skipDryRun: false
+            rollbackSteps:
+              - step:
+                  name: Canary Delete
+                  identifier: rollbackCanaryDelete
+                  type: K8sCanaryDelete
+                  timeout: 10m
+                  spec: {}
+              - step:
+                  name: Rolling Rollback
+                  identifier: rollingRollback
+                  type: K8sRollingRollback
+                  timeout: 10m
+                  spec: {}
+        tags: {}
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: StageRollback
   variables:
     - name: TAG
       type: String
