@@ -16,6 +16,7 @@ service:
                   gitFetchType: Branch
                   paths:
                     - deployment.yaml
+                  repoName: Blue-Green
                   branch: main
               skipResourceVersioning: false
               enableDeclarativeRollback: false
