@@ -90,7 +90,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: bankapp-service
+  name: bankapp-service-1
   annotations:
     harness.io/primary-service: "true"
 spec:
@@ -106,7 +106,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: bankapp-service
+  name: bankapp-service-2
   annotations:
     harness.io/stage-service: "true"
 spec:
