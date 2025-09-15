@@ -101,7 +101,6 @@ spec:
   selector:
     app: bankapp
     harness.io/color: blue
-    version: <+pipeline.variables.tag.toLower()>
 ---
 # BankApp service
 apiVersion: v1
@@ -118,4 +117,3 @@ spec:
   selector:
     app: bankapp
     harness.io/color: blue
-    version: <+pipeline.variables.tag.toLower()>
