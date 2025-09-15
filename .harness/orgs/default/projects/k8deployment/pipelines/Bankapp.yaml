@@ -51,7 +51,7 @@ pipeline:
                     connectorRef: account.Dockerhub
                     repo: arvindpdige/bankapp
                     tags:
-                      - <+pipeline.variables.tag>
+                      - <+pipeline.variables.TAG>
                     caching: true
     - stage:
         name: BankApp
@@ -105,7 +105,7 @@ pipeline:
             type: String
             description: ""
             required: true
-            value: green
+            value: v1
           - name: ns
             type: String
             description: ""
@@ -116,7 +116,7 @@ pipeline:
       type: String
       description: ""
       required: true
-      value: green
+      value: v1
     - name: ns
       type: String
       description: ""
