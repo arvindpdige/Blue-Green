@@ -123,6 +123,7 @@ jobs:
     #   with:
     #     username: ${{ secrets.DOCKER_HUB_USERNAME }}
     #     password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+    - uses: actions/checkout@v4
     - name: Set up Kubeconfig
       run: |
         echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config 
