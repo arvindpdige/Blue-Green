@@ -9,7 +9,7 @@ on:
 jobs:
 
   compile:
-    runs-on: Runner-wsl
+    runs-on: self-hosted
     
     steps:
     - uses: actions/checkout@v4
@@ -23,7 +23,7 @@ jobs:
       run: mvn compile
 
   test:
-    runs-on: Runner-wsl
+    runs-on: self-hosted
     needs: compile
     steps:
     - uses: actions/checkout@v4
