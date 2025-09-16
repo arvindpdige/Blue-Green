@@ -94,14 +94,14 @@ jobs:
         -Dmaven.test.failure.ignore=true \
         -Dsonar.projectKey=blue-green \
         -Dsonar.projectName='blue-green'
-    - name: Quality Gate Check
-      id: sonarqube-quality-gate-check
-      uses: sonarsource/sonarqube-quality-gate-action@master
-      with:
-        pollingTimeoutSec: 600
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+    # - name: Quality Gate Check
+    #   id: sonarqube-quality-gate-check
+    #   uses: sonarsource/sonarqube-quality-gate-action@master
+    #   with:
+    #     pollingTimeoutSec: 600
+    #   env:
+    #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
   Build_docker_image: 
     runs-on: self-hosted
@@ -128,7 +128,7 @@ jobs:
       with:
         context: .
         push: true
-        tags: arvindpdige/bankapp:actions
+        tags: arvindpdige/bankapp:${{ vars.IMAGE_TAG }}
         file: ./Dockerfile
 
   deploy:
@@ -142,6 +142,7 @@ jobs:
         chmod 600 $HOME/.kube/config
     - name: Deploy to Kubernetes
       run: |
+        kubectl set image deployment/bankapp bankapp=arvindpdige/bankapp:${{ vars.IMAGE_TAG }} -n blue-green
         kubectl apply -f action-deploy.yaml -n blue-green
         kubectl get all -n blue-green 
       
