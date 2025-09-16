@@ -125,7 +125,7 @@ jobs:
     #     password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
     - name: Set up Kubeconfig
       run: |
-        echo "${{ secrets.KUBECONFIG }}" | base64 --decode > $HOME/.kube/config 
+        echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config 
         chmod 600 $HOME/.kube/config
     - name: Deploy to Kubernetes
       run: |
