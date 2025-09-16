@@ -20,4 +20,13 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B package --file pom.xml -Dmaven.test.failure.ignore=true
+      run: mvn compile
+
+  test:
+    runs-on: ubuntu-latest
+    needs: compile
+    steps:
+    - uses: actions/checkout@v4
+    - name: Test with Maven
+      run: mvn test --file pom.xml -Dmaven.test.failure.ignore=true
+      
