@@ -129,6 +129,8 @@ jobs:
         chmod 600 $HOME/.kube/config
     - name: Deploy to Kubernetes
       run: |
+        pwd
+        ls -lrth
         kubectl apply -f action-deploy.yaml -n blue-green
         kubectl get all -n blue-green 
       
