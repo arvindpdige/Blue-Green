@@ -28,7 +28,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Test with Maven
-      run: mvn test --file pom.xml -Dmaven.test.failure.ignore=true
+      run: mvn test -Dmaven.test.failure.ignore=true --file pom.xml
   
   SonarScan:
     runs-on: self-hosted
