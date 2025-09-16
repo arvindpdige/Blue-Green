@@ -41,51 +41,51 @@ jobs:
         name: app-jar
         path: target/*.jar
   
-  sonarScan:
-    runs-on: self-hosted
-    needs: build_test
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        # Disabling shallow clones is recommended for improving the relevancy of reporting
-        fetch-depth: 0
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-    - name: Cache SonarQube packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.sonar/cache
-        key: ${{ runner.os }}-sonar
-        restore-keys: ${{ runner.os }}-sonar
-    - name: Cache Maven packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
-    - name: SonarQube Scan
-      # uses: SonarSource/sonarqube-scan-action@v5.3.1 # Ex: v4.1.0, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-      run: | 
-        mvn -B verify \
-        org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-        -Dmaven.test.failure.ignore=true \
-        -Dsonar.projectKey=blue-green \
-        -Dsonar.projectName='blue-green'
-    - name: Quality Gate Check
-      id: sonarqube-quality-gate-check
-      uses: sonarsource/sonarqube-quality-gate-action@master
-      with:
-        pollingTimeoutSec: 600
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+  # sonarScan:
+  #   runs-on: self-hosted
+  #   needs: build_test
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #     with:
+  #       # Disabling shallow clones is recommended for improving the relevancy of reporting
+  #       fetch-depth: 0
+  #   - name: Set up JDK 17
+  #     uses: actions/setup-java@v4
+  #     with:
+  #       java-version: '17'
+  #       distribution: 'temurin'
+  #       cache: maven
+  #   - name: Cache SonarQube packages
+  #     uses: actions/cache@v4
+  #     with:
+  #       path: ~/.sonar/cache
+  #       key: ${{ runner.os }}-sonar
+  #       restore-keys: ${{ runner.os }}-sonar
+  #   - name: Cache Maven packages
+  #     uses: actions/cache@v4
+  #     with:
+  #       path: ~/.m2
+  #       key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+  #       restore-keys: ${{ runner.os }}-m2
+  #   - name: SonarQube Scan
+  #     # uses: SonarSource/sonarqube-scan-action@v5.3.1 # Ex: v4.1.0, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
+  #     env:
+  #       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+  #     run: | 
+  #       mvn -B verify \
+  #       org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+  #       -Dmaven.test.failure.ignore=true \
+  #       -Dsonar.projectKey=blue-green \
+  #       -Dsonar.projectName='blue-green'
+  #   - name: Quality Gate Check
+  #     id: sonarqube-quality-gate-check
+  #     uses: sonarsource/sonarqube-quality-gate-action@master
+  #     with:
+  #       pollingTimeoutSec: 600
+  #     env:
+  #       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #       SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
   Build_docker_image: 
     runs-on: self-hosted
@@ -115,4 +115,3 @@ jobs:
         tags: arvindpdige/bankapp:actions
         file: ./Dockerfile
 
-        
