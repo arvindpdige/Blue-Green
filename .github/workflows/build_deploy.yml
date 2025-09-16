@@ -48,15 +48,19 @@ jobs:
       with:
         # Disabling shallow clones is recommended for improving the relevancy of reporting
         fetch-depth: 0
-    - name: Install GitLeaks
-      run: |
-        sudo apt install gitleaks -y
+    # - name: Install GitLeaks
+    #   run: |
+    #     sudo apt install gitleaks -y
     - name: gitleaks scan
       run: |
         gitleaks detect --source . --report-path gitleaks-report.json || true
-    - name: Install Trivy
-      run: |
-        sudo apt install trivy -y
+    # - name: Install Trivy
+    #   run: |
+    #     sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+    #     wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+    #     echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+    #     sudo apt-get update -y
+    #     sudo apt-get install -y trivy
     - name: trivy scan
       run: |
         trivy fs . --format table -o trivy-report.json
@@ -101,7 +105,7 @@ jobs:
 
   Build_docker_image: 
     runs-on: self-hosted
-    needs: build_test
+    needs: securityScan
     steps:
     - uses: actions/checkout@v4
     - name: Download Artifacts
