@@ -39,7 +39,7 @@ pipeline:
                     config: default
                     target:
                       type: repository
-                      workspace: /harness
+                      workspace: ./
                       detection: auto
                     advanced:
                       log:
