@@ -31,6 +31,21 @@ pipeline:
           execution:
             steps:
               - step:
+                  type: Gitleaks
+                  name: Gitleaks
+                  identifier: Gitleaks
+                  spec:
+                    mode: orchestration
+                    config: default
+                    target:
+                      type: repository
+                      workspace: /harness
+                      detection: auto
+                    advanced:
+                      log:
+                        level: info
+                      fail_on_severity: none
+              - step:
                   type: Run
                   name: Artifact_Build
                   identifier: Artifact_Build
@@ -43,8 +58,18 @@ pipeline:
                       mvn clean compile install package -Dmaven.test.failure.ignore=true
                     imagePullPolicy: IfNotPresent
               - step:
+                  type: BuildAndPushDockerRegistry
+                  name: BuildAndPushArtifact
+                  identifier: BuildAndPushArtifact
+                  spec:
+                    connectorRef: account.Dockerhub
+                    repo: arvindpdige/bankapp
+                    tags:
+                      - <+pipeline.variables.TAG>
+                    caching: true
+              - step:
                   type: AquaTrivy
-                  name: AquaTrivy_1
+                  name: AquaTrivy
                   identifier: AquaTrivy_1
                   spec:
                     mode: orchestration
@@ -55,6 +80,7 @@ pipeline:
                     advanced:
                       log:
                         level: info
+                      fail_on_severity: none
                     privileged: true
                     imagePullPolicy: IfNotPresent
                     connectorRef: account.Dockerhub
@@ -63,16 +89,6 @@ pipeline:
                       tag: <+pipeline.variables.TAG>
                       name: arvindpdige/bankapp
                       domain: docker.io
-              - step:
-                  type: BuildAndPushDockerRegistry
-                  name: BuildAndPushArtifact
-                  identifier: BuildAndPushArtifact
-                  spec:
-                    connectorRef: account.Dockerhub
-                    repo: arvindpdige/bankapp
-                    tags:
-                      - <+pipeline.variables.TAG>
-                    caching: true
     - stage:
         name: canary
         identifier: canary
