@@ -188,7 +188,7 @@ pipeline:
       type: String
       description: ""
       required: true
-      value: v2
+      value: v3
     - name: ns
       type: String
       description: ""
