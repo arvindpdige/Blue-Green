@@ -131,20 +131,30 @@ jobs:
         push: true
         tags: arvindpdige/bankapp:${{ vars.IMAGE_TAG }}
         file: ./Dockerfile
+    - name: trivy scan
+      run: |
+        trivy --format json -o bankapp_image_vul.json arvindpdige/bankapp:${{ vars.IMAGE_TAG }}
 
   deploy:
     runs-on: self-hosted  
     needs: Build_docker_image
     steps:
     - uses: actions/checkout@v4
+    
     - name: Set up Kubeconfig
       run: |
         echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config 
         chmod 600 $HOME/.kube/config
+        
+    - name: Replace image tag in manifest
+      run: |
+        sed -i "s|\(image: arvindpdige/bankapp:\).*|\1${IMAGE_TAG}|g" action-deploy.yaml
+      env:
+        IMAGE_TAG: ${{ vars.IMAGE_TAG }}
+
     - name: Deploy to Kubernetes
       run: |
-        kubectl set image deployment/bankapp bankapp=arvindpdige/bankapp:${{ vars.IMAGE_TAG }} -n blue-green
         kubectl apply -f action-deploy.yaml -n blue-green
-        kubectl get all -n blue-green 
+        kubectl get all -n blue-green
       
 
