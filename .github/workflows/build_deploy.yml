@@ -1,8 +1,8 @@
 name: Java CI with Maven
 
-# on:
-#   push:
-#     branches: [ "action" ]
+on:
+  push:
+    branches: [ "action" ]
   # pull_request:
   #   branches: [ "main" ]
 
@@ -133,7 +133,7 @@ jobs:
         file: ./Dockerfile
     - name: trivy scan
       run: |
-        trivy image --format json --output arvindpdige/bankapp:${{ vars.IMAGE_TAG }}
+        trivy image --format json --output bankapp_image_vul.json arvindpdige/bankapp:${{ vars.IMAGE_TAG }}
 
   deploy:
     runs-on: self-hosted  
