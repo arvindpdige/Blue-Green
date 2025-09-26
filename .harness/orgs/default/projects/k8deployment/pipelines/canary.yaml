@@ -22,12 +22,6 @@ pipeline:
             override: true
           buildIntelligence:
             enabled: true
-          platform:
-            os: Linux
-            arch: Amd64
-          runtime:
-            type: Docker
-            spec: {}
           execution:
             steps:
               - step:
@@ -110,6 +104,14 @@ pipeline:
                       tag: <+pipeline.variables.TAG>
                       name: arvindpdige/bankapp
                       domain: docker.io
+          infrastructure:
+            type: KubernetesDirect
+            spec:
+              connectorRef: account.minikubeconn
+              namespace: prod
+              automountServiceAccountToken: true
+              nodeSelector: {}
+              os: Linux
     - stage:
         name: canary
         identifier: canary
