@@ -34,11 +34,17 @@ jobs:
         cache: maven
     - name: Build_And_Test with Maven
       run: mvn test package -Dmaven.test.failure.ignore=true --file pom.xml
-    - name: Archive Artifacts
-      uses: actions/upload-artifact@v4
+    - name: Zip artifact
+      run: zip -r app-jar.zip target/*.jar
+    # - name: Archive Artifacts
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: app-jar
+    #     path: target/*.jar
+    - uses: actions/upload-artifact@v4
       with:
         name: app-jar
-        path: target/*.jar
+        path: app-jar.zip
   
   securityScan:
     runs-on: self-hosted
