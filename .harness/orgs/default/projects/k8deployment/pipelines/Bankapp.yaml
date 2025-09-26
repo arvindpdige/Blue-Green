@@ -23,12 +23,6 @@ pipeline:
             override: true
           buildIntelligence:
             enabled: true
-          platform:
-            os: Linux
-            arch: Amd64
-          runtime:
-            type: Docker
-            spec: {}
           execution:
             steps:
               - step:
@@ -53,6 +47,14 @@ pipeline:
                     tags:
                       - <+pipeline.variables.TAG>
                     caching: true
+          infrastructure:
+            type: KubernetesDirect
+            spec:
+              connectorRef: account.minikubeconn
+              namespace: blue-green
+              automountServiceAccountToken: true
+              nodeSelector: {}
+              os: Linux
     - stage:
         name: BankApp
         identifier: BankApp
