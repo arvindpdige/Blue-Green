@@ -58,6 +58,27 @@ pipeline:
                       mvn clean compile install package -Dmaven.test.failure.ignore=true
                     imagePullPolicy: IfNotPresent
               - step:
+                  type: Sonarqube
+                  name: Sonarqube_1
+                  identifier: Sonarqube_1
+                  spec:
+                    mode: orchestration
+                    config: default
+                    target:
+                      type: repository
+                      workspace: ./
+                      detection: auto
+                    advanced:
+                      log:
+                        level: info
+                      fail_on_severity: none
+                    auth:
+                      access_token: squ_0db7a9411f2b85f2420f9e2fa3b6a3befad8993f
+                      domain: http://localhost:9000
+                      ssl: false
+                    tool:
+                      project_key: blue-green
+              - step:
                   type: BuildAndPushDockerRegistry
                   name: BuildAndPushArtifact
                   identifier: BuildAndPushArtifact
