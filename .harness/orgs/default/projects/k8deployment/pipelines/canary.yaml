@@ -190,7 +190,7 @@ pipeline:
       type: String
       description: ""
       required: true
-      value: actions2
+      value: actions3
     - name: ns
       type: String
       description: ""
