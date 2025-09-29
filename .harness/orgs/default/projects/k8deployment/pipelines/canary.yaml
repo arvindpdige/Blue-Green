@@ -190,9 +190,9 @@ pipeline:
       type: String
       description: ""
       required: true
-      value: v3
+      value: actions2
     - name: ns
       type: String
       description: ""
       required: true
-      value: prod
+      value: blue-green
