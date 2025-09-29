@@ -124,10 +124,10 @@ pipeline:
                           skipDryRun: false
                     - step:
                         type: HarnessApproval
-                        name: HarnessApproval_1
+                        name: HarnessApproval
                         identifier: HarnessApproval_1
                         spec:
-                          approvalMessage: Please review the following information and approve the pipeline progression
+                          approvalMessage: Deploy all instances with newer version
                           includePipelineExecutionHistory: true
                           isAutoRejectEnabled: false
                           approvers:
