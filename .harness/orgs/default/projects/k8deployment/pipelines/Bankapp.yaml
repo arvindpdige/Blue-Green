@@ -124,3 +124,20 @@ pipeline:
       description: ""
       required: false
       value: prod
+  notificationRules:
+    - name: Blue_Green_Harness
+      identifier: Blue_Green_Harness
+      pipelineEvents:
+        - type: PipelineEnd
+        - type: PipelineFailed
+        - type: StageFailed
+          forStages:
+            - AllStages
+        - type: StepFailed
+      notificationMethod:
+        type: Email
+        spec:
+          userGroups: []
+          recipients:
+            - arvindpdige@gmail.com
+      enabled: true
