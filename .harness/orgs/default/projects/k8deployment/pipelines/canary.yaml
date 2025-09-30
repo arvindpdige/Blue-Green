@@ -196,3 +196,20 @@ pipeline:
       description: ""
       required: true
       value: blue-green
+  notificationRules:
+    - name: Canary_Harness
+      identifier: Canary_Harness
+      pipelineEvents:
+        - type: PipelineEnd
+        - type: PipelineFailed
+        - type: StageFailed
+          forStages:
+            - AllStages
+        - type: StepFailed
+      notificationMethod:
+        type: Email
+        spec:
+          userGroups: []
+          recipients:
+            - arvindpdige@gmail.com
+      enabled: true
