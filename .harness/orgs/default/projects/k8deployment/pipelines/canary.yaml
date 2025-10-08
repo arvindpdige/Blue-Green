@@ -91,6 +91,9 @@ pipeline:
               automountServiceAccountToken: true
               nodeSelector: {}
               os: Linux
+        when:
+          pipelineStatus: Success
+          condition: <+pipeline.branch>=="main-canary"
     - stage:
         name: canary
         identifier: canary
