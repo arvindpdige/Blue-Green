@@ -40,3 +40,11 @@ https://github.com/marketplace/actions/sonarqube-quality-gate-check
 https://github.com/marketplace/actions/build-and-push-docker-images
 
 
+# K8 AUthentication 
+https://github.com/marketplace/actions/kubernetes-k8s-k3s-cli-kubectl
+
+- uses: actions-hub/kubectl@master
+  env:
+    KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+  with:
+    args: get pods
