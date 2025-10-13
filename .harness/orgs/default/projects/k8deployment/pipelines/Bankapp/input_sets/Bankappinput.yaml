@@ -1,0 +1,14 @@
+inputSet:
+  name: Bankapp-input
+  identifier: Bankappinput
+  orgIdentifier: default
+  projectIdentifier: k8deployment
+  pipeline:
+    identifier: Bankapp
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: main
