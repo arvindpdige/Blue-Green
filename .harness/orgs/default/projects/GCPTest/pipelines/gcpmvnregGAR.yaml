@@ -45,9 +45,20 @@ pipeline:
                       GCP_KEY_JSON: <+secrets.getValue("gcp-sa")>
                     command: |-
                       echo "Authenticating with Google Cloud..."
-                      printf '%b' "$GCP_KEY_JSON" > /tmp/gcp-key.json
+
+                      python3 - <<'EOF'
+                      import os, json
+                      key = os.environ.get("GCP_KEY_JSON")
+                      if not key:
+                        raise SystemExit("Missing GCP_KEY_JSON")
+                      key_json = json.loads(key)
+                      with open("/tmp/gcp-key.json", "w") as f:
+                        json.dump(key_json, f)
+                      EOF
+
                       gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
                       gcloud config set project harness-475313
+
                       export GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json
 
                       # # gcloud auth activate-service-account --key-file=<(echo '<+secrets.getValue("gcp-sa")>')
