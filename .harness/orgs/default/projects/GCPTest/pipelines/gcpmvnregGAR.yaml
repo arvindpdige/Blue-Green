@@ -64,8 +64,8 @@ pipeline:
 
                       export GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json
 
-                      mvn deploy \
-                        -DaltDeploymentRepository=artifact-registry::default::https://asia-south1-maven.pkg.dev/harness-475313/gcp-mvn-snap-reg
+                      # mvn deploy \
+                      #   -DaltDeploymentRepository=artifact-registry::default::https://asia-south1-maven.pkg.dev/harness-475313/gcp-mvn-snap-reg
 
 
                       # # gcloud auth activate-service-account --key-file=<(echo '<+secrets.getValue("gcp-sa")>')
