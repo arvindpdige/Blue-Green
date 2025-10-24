@@ -49,7 +49,7 @@ pipeline:
                       import os, json
                       key = os.environ.get("GCP_KEY_JSON")
                       if not key:
-                        raise SystemExit("Missing GCP_KEY_JSON secret")
+                        raise SystemExit("Missing GCP_KEY_JSON")
                       key_json = json.loads(key)
                       with open("/tmp/gcp-key.json", "w") as f:
                         json.dump(key_json, f)
