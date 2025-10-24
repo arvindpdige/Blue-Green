@@ -1,0 +1,75 @@
+pipeline:
+  name: gcp-mvn-reg-GAR
+  identifier: gcpmvnregGAR
+  projectIdentifier: GCPTest
+  orgIdentifier: default
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: gitall
+        repoName: Blue-Green
+        build: <+input>
+  stages:
+    - stage:
+        name: Build
+        identifier: Build
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          caching:
+            enabled: true
+            override: true
+          buildIntelligence:
+            enabled: true
+          infrastructure:
+            type: KubernetesDirect
+            spec:
+              connectorRef: account.minikubeconn
+              namespace: maven
+              automountServiceAccountToken: true
+              nodeSelector: {}
+              os: Linux
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Build_jar
+                  identifier: Build_jar
+                  spec:
+                    connectorRef: account.Dockerhub
+                    image: maven:3-openjdk-17
+                    shell: Sh
+                    command: |-
+                      mvn -v
+                      mvn clean compile install package -Dmaven.test.failure.ignore=true
+              - step:
+                  type: Run
+                  name: PushToGar
+                  identifier: PushToGar
+                  spec:
+                    connectorRef: account.Dockerhub
+                    image: gcr.io/google.com/cloudsdktool/cloud-sdk:latest
+                    shell: Bash
+                    command: |-
+                      echo "Authenticating with Google Cloud..."
+
+                      gcloud auth activate-service-account --key-file=<(echo '<+secrets.getValue("gcp-sa")>')
+                      gcloud config set project harness-475313
+
+                      echo "Uploading WAR to Artifact Registry..."
+                      # Ensure the WAR file exists
+                      if [ ! -f target/bankapp-0.0.1-SNAPSHOT.jar ]; then
+                        echo "❌ WAR file not found! Make sure mvn package ran successfully or provided path is correct."
+                        exit 1
+                      fi        
+                      gcloud artifacts generic upload \
+                        --project=harness-475313 \
+                        --location=asia-south1 \
+                        --repository=gcp-mvn-reg \
+                        --package=bankapp \
+                        --version=0.0.1-SNAPSHOT \
+                        --source=target/bankapp-0.0.1-SNAPSHOT.jar
+
+                        echo "✅ WAR uploaded successfully!......"
