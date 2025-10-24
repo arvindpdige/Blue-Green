@@ -61,9 +61,12 @@ pipeline:
                       gcloud auth configure-docker
 
                       gcloud artifacts repositories list --location=asia-south1
-                      gcloud auth configure-docker asia-south1-docker.pkg.dev -q
 
                       export GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json
+
+                      mvn deploy \
+                        -DaltDeploymentRepository=artifact-registry::default::https://asia-south1-maven.pkg.dev/harness-475313/gcp-mvn-snap-reg
+
 
                       # # gcloud auth activate-service-account --key-file=<(echo '<+secrets.getValue("gcp-sa")>')
                       # # gcloud config set project harness-475313
