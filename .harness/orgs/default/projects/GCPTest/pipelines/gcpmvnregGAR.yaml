@@ -40,7 +40,7 @@ pipeline:
                   spec:
                     connectorRef: account.Dockerhub
                     image: gcr.io/google.com/cloudsdktool/cloud-sdk:latest
-                    shell: Bash
+                    shell: Sh
                     envVariables:
                       GCP_KEY_JSON: <+secrets.getValue("gcp-sa")>
                     command: |-
