@@ -42,7 +42,7 @@ pipeline:
                     image: gcr.io/google.com/cloudsdktool/cloud-sdk:latest
                     shell: Sh
                     envVariables:
-                      GCP_KEY_JSON: <+secrets.getValue("GCP_KEY_JSON")>
+                      GCP_KEY_JSON: <+secrets.getValue("gcp-sa")>
                     command: |-
                       echo "Authenticating with Google Cloud..."
                       python3 - <<'EOF'
