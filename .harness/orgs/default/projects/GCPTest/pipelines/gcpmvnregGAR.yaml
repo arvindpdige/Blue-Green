@@ -44,6 +44,9 @@ pipeline:
                     command: |-
                       mvn -v
                       mvn clean compile install package -Dmaven.test.failure.ignore=true
+
+
+                      ls -lrth target/
               - step:
                   type: Run
                   name: PushToGar
@@ -67,7 +70,7 @@ pipeline:
                       gcloud artifacts generic upload \
                         --project=harness-475313 \
                         --location=asia-south1 \
-                        --repository=gcp-mvn-reg \
+                        --repository=gcp-mvn-snap-reg \
                         --package=bankapp \
                         --version=0.0.1-SNAPSHOT \
                         --source=target/bankapp-0.0.1-SNAPSHOT.jar
