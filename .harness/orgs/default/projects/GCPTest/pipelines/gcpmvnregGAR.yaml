@@ -58,28 +58,11 @@ pipeline:
                       gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
                       gcloud config set project harness-475313
 
-                      gcloud auth configure-docker
+                      gcloud auth list
 
                       gcloud artifacts repositories list --location=asia-south1
-
+                      cat /tmp/gcp-key.json
                       export GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json
-
-                      # mvn deploy \
-                      #   -DaltDeploymentRepository=artifact-registry::default::https://asia-south1-maven.pkg.dev/harness-475313/gcp-mvn-snap-reg
-
-
-                      # # gcloud auth activate-service-account --key-file=<(echo '<+secrets.getValue("gcp-sa")>')
-                      # # gcloud config set project harness-475313
-
-                          
-                      # mvn clean deploy \
-                      # -DskipTests \
-                      # -DaltDeploymentRepository=artifact-registry::default::https://asia-south1-maven.pkg.dev/harness-475313/gcp-mvn-snap-reg \
-                      # -DrepositoryId=artifact-registry \
-                      # -Dgcp.service.account.file=/tmp/gcp-key.json \
-                      # -Dgcp.project.id=harness-475313
-
-                      # echo "✅ JAR uploaded successfully!......"
               - step:
                   type: Run
                   name: Push_To_Gar
