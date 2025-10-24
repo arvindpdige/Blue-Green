@@ -35,22 +35,21 @@ pipeline:
             steps:
               - step:
                   type: Run
-                  name: Auth
-                  identifier: PushToGar
+                  name: Build_And_Push_WAR
+                  identifier: Build_And_Push_WAR
                   spec:
                     connectorRef: account.Dockerhub
                     image: gcr.io/google.com/cloudsdktool/cloud-sdk:latest
                     shell: Sh
                     envVariables:
-                      GCP_KEY_JSON: <+secrets.getValue("gcp-sa")>
+                      GCP_KEY_JSON: <+secrets.getValue("GCP_KEY_JSON")>
                     command: |-
                       echo "Authenticating with Google Cloud..."
-
                       python3 - <<'EOF'
                       import os, json
                       key = os.environ.get("GCP_KEY_JSON")
                       if not key:
-                        raise SystemExit("Missing GCP_KEY_JSON")
+                        raise SystemExit("Missing GCP_KEY_JSON secret")
                       key_json = json.loads(key)
                       with open("/tmp/gcp-key.json", "w") as f:
                         json.dump(key_json, f)
@@ -58,6 +57,7 @@ pipeline:
 
                       gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
                       gcloud config set project harness-475313
+                      gcloud auth configure-docker asia-south1-docker.pkg.dev -q
 
                       export GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json
 
