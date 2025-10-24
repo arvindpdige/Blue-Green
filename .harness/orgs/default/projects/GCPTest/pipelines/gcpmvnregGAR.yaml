@@ -35,44 +35,47 @@ pipeline:
             steps:
               - step:
                   type: Run
-                  name: Build_jar
-                  identifier: Build_jar
-                  spec:
-                    connectorRef: account.Dockerhub
-                    image: maven:3-openjdk-17
-                    shell: Sh
-                    command: |-
-                      mvn -v
-                      mvn clean compile install package -Dmaven.test.failure.ignore=true
-
-
-                      ls -lrth target/
-              - step:
-                  type: Run
-                  name: PushToGar
+                  name: Auth
                   identifier: PushToGar
                   spec:
                     connectorRef: account.Dockerhub
                     image: gcr.io/google.com/cloudsdktool/cloud-sdk:latest
                     shell: Bash
+                    envVariables:
+                      GCP_KEY_JSON: <+secrets.getValue("gcp-sa")>
                     command: |-
                       echo "Authenticating with Google Cloud..."
-
-                      gcloud auth activate-service-account --key-file=<(echo '<+secrets.getValue("gcp-sa")>')
+                      printf '%b' "$GCP_KEY_JSON" > /tmp/gcp-key.json
+                      gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
                       gcloud config set project harness-475313
+                      export GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json
 
-                      echo "Uploading WAR to Artifact Registry..."
-                      # Ensure the WAR file exists
-                      if [ ! -f target/bankapp-0.0.1-SNAPSHOT.jar ]; then
-                        echo "❌ WAR file not found! Make sure mvn package ran successfully or provided path is correct."
-                        exit 1
-                      fi        
-                      gcloud artifacts generic upload \
-                        --project=harness-475313 \
-                        --location=asia-south1 \
-                        --repository=gcp-mvn-snap-reg \
-                        --package=bankapp \
-                        --version=0.0.1-SNAPSHOT \
-                        --source=target/bankapp-0.0.1-SNAPSHOT.jar
+                      # # gcloud auth activate-service-account --key-file=<(echo '<+secrets.getValue("gcp-sa")>')
+                      # # gcloud config set project harness-475313
 
-                        echo "✅ WAR uploaded successfully!......"
+                          
+                      # mvn clean deploy \
+                      # -DskipTests \
+                      # -DaltDeploymentRepository=artifact-registry::default::https://asia-south1-maven.pkg.dev/harness-475313/gcp-mvn-snap-reg \
+                      # -DrepositoryId=artifact-registry \
+                      # -Dgcp.service.account.file=/tmp/gcp-key.json \
+                      # -Dgcp.project.id=harness-475313
+
+                      # echo "✅ JAR uploaded successfully!......"
+              - step:
+                  type: Run
+                  name: Push_To_Gar
+                  identifier: Build_jar
+                  spec:
+                    connectorRef: account.Dockerhub
+                    image: maven:3-openjdk-17
+                    shell: Bash
+                    command: |-
+                      mvn clean deploy \
+                        -DskipTests \
+                        -DaltDeploymentRepository=artifact-registry::default::https://asia-south1-maven.pkg.dev/harness-475313/gcp-mvn-snap-reg \
+                        -DrepositoryId=artifact-registry \
+                        -Dgcp.service.account.file=/tmp/gcp-key.json \
+                        -Dgcp.project.id=harness-475313
+
+                      echo "✅ JAR uploaded successfully!......"
