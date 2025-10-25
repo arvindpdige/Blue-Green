@@ -51,18 +51,18 @@ pipeline:
                       if not key:
                         raise SystemExit("Missing GCP_KEY_JSON")
                       key_json = json.loads(key)
-                      with open("/tmp/gcp-key.json", "w") as f:
+                      with open("/harness/gcp-key.json", "w") as f:
                         json.dump(key_json, f)
                       EOF
 
-                      gcloud auth activate-service-account --key-file=/tmp/gcp-key.json
+                      gcloud auth activate-service-account --key-file=/harness/gcp-key.json
                       gcloud config set project harness-475313
 
                       gcloud auth list
 
                       gcloud artifacts repositories list --location=asia-south1
-                      cat /tmp/gcp-key.json
-                      export GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json
+                      cat /harness/gcp-key.json
+                      export GOOGLE_APPLICATION_CREDENTIALS=/harness/gcp-key.json
               - step:
                   type: Run
                   name: Run_3
@@ -71,7 +71,7 @@ pipeline:
                     connectorRef: account.Dockerhub
                     image: alpine
                     shell: Sh
-                    command: cat /tmp/gcp-key.json
+                    command: cat /harness/gcp-key.json
               - step:
                   type: Run
                   name: Push_To_Gar
@@ -81,11 +81,16 @@ pipeline:
                     image: maven:3-openjdk-17
                     shell: Bash
                     command: |-
+                      echo "Using service account key from /harness/gcp-key.json"
+                      export GOOGLE_APPLICATION_CREDENTIALS=/harness/gcp-key.json
+
+                      ENCODED_KEY=$(base64 -w0 /harness/gcp-key.json)
+
                       mvn clean deploy \
                         -DskipTests \
-                        -DaltDeploymentRepository=artifact-registry::default::https://asia-south1-maven.pkg.dev/harness-475313/gcp-mvn-snap-reg \
-                        -DrepositoryId=artifact-registry \
-                        -Dgcp.service.account.file=/tmp/gcp-key.json \
-                        -Dgcp.project.id=harness-475313
+                        -DaltDeploymentRepository=artifact-registry::default::https://_json_key_base64:${ENCODED_KEY}@asia-south1-maven.pkg.dev/harness-475313/gcp-mvn-snap-reg
+                        # -DpomFile=pom.xml -Dfile=target/*.jar
+                        # -Dgcp.service.account.file=/tmp/gcp-key.json \
+                        # -Dgcp.project.id=harness-475313
 
                       echo "✅ JAR uploaded successfully!......"
