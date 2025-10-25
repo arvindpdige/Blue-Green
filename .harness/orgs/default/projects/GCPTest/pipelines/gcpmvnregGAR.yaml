@@ -65,6 +65,15 @@ pipeline:
                       export GOOGLE_APPLICATION_CREDENTIALS=/tmp/gcp-key.json
               - step:
                   type: Run
+                  name: Run_3
+                  identifier: Run_3
+                  spec:
+                    connectorRef: account.Dockerhub
+                    image: alpine
+                    shell: Sh
+                    command: cat /tmp/gcp-key.json
+              - step:
+                  type: Run
                   name: Push_To_Gar
                   identifier: Build_jar
                   spec:
