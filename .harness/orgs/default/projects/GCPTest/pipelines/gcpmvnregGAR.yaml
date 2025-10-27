@@ -41,8 +41,6 @@ pipeline:
                     connectorRef: account.Dockerhub
                     image: gcr.io/google.com/cloudsdktool/cloud-sdk:latest
                     shell: Sh
-                    envVariables:
-                      GCP_KEY_JSON: <+secrets.getValue("gcp-sa")>
                     command: |-
                       echo "Authenticating with Google Cloud..."
                       python3 - <<'EOF'
@@ -60,18 +58,11 @@ pipeline:
 
                       gcloud auth list
 
-                      gcloud artifacts repositories list --location=asia-south1
-                      cat /harness/gcp-key.json
-                      export GOOGLE_APPLICATION_CREDENTIALS=/harness/gcp-key.json
-              - step:
-                  type: Run
-                  name: Run_3
-                  identifier: Run_3
-                  spec:
-                    connectorRef: account.Dockerhub
-                    image: alpine
-                    shell: Sh
-                    command: cat /harness/gcp-key.json
+                      # gcloud artifacts repositories list --location=asia-south1
+                      # cat /harness/gcp-key.json
+                      # export GOOGLE_APPLICATION_CREDENTIALS=/harness/gcp-key.json
+                    envVariables:
+                      GCP_KEY_JSON: <+secrets.getValue("gcp-sa")>
               - step:
                   type: Run
                   name: Push_To_Gar
