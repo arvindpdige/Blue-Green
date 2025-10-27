@@ -1,0 +1,79 @@
+pipeline:
+  name: gcp-deployment
+  identifier: gcpdeployment
+  projectIdentifier: k8deployment
+  orgIdentifier: default
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: gitarvibankapp
+        build: <+input>
+  stages:
+    - stage:
+        name: Build
+        identifier: Build
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: true
+          caching:
+            enabled: true
+            override: true
+          buildIntelligence:
+            enabled: true
+          infrastructure:
+            type: KubernetesDirect
+            spec:
+              connectorRef: gke
+              namespace: gke
+              automountServiceAccountToken: true
+              nodeSelector: {}
+              os: Linux
+          execution:
+            steps:
+              - step:
+                  type: Gitleaks
+                  name: Gitleaks
+                  identifier: Gitleaks
+                  spec:
+                    mode: orchestration
+                    config: default
+                    target:
+                      type: repository
+                      workspace: ./
+                      detection: auto
+                    advanced:
+                      log:
+                        level: info
+                      fail_on_severity: none
+              - step:
+                  type: Run
+                  name: Artifact_Build
+                  identifier: Artifact_Build
+                  spec:
+                    connectorRef: account.Dockerhub
+                    image: maven:3-openjdk-17
+                    shell: Sh
+                    command: |-
+                      mvn -v
+                      mvn clean compile install package -Dmaven.test.failure.ignore=true
+                    imagePullPolicy: IfNotPresent
+              - step:
+                  type: BuildAndPushGAR
+                  name: BuildAndPushGAR
+                  identifier: BuildAndPushGAR
+                  spec:
+                    connectorRef: account.gcpcloudaccountscope
+                    host: asia-south1-maven.pkg.dev
+                    projectID: harness-475313/gcp-mvn-snap-reg
+                    imageName: Bankapp
+                    tags:
+                      - <+pipeline.variables.TAG>
+                    caching: true
+  variables:
+    - name: TAG
+      type: String
+      description: ""
+      required: true
+      value: <+input>
