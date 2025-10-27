@@ -35,8 +35,8 @@ pipeline:
             steps:
               - step:
                   type: Run
-                  name: Build_And_Push_WAR
-                  identifier: Build_And_Push_WAR
+                  name: GCP_Auth
+                  identifier: GCP_Auth
                   spec:
                     connectorRef: account.Dockerhub
                     image: gcr.io/google.com/cloudsdktool/cloud-sdk:latest
@@ -65,8 +65,8 @@ pipeline:
                       GCP_KEY_JSON: <+secrets.getValue("gcp-sa")>
               - step:
                   type: Run
-                  name: Push_To_Gar
-                  identifier: Build_jar
+                  name: Build_And_Push_To_Gar
+                  identifier: Build_And_Push_To_Gar
                   spec:
                     connectorRef: account.Dockerhub
                     image: maven:3-openjdk-17
