@@ -25,8 +25,8 @@ pipeline:
           infrastructure:
             type: KubernetesDirect
             spec:
-              connectorRef: gke
-              namespace: gke
+              connectorRef: account.gcpconn
+              namespace: maven
               automountServiceAccountToken: true
               nodeSelector: {}
               os: Linux
@@ -65,8 +65,8 @@ pipeline:
                   identifier: BuildAndPushGAR
                   spec:
                     connectorRef: account.gcpcloudaccountscope
-                    host: asia-south1-maven.pkg.dev
-                    projectID: harness-475313/gcp-mvn-snap-reg
+                    host: asia-south1-docker.pkg.dev
+                    projectID: harness-475313/gcp-docker-reg
                     imageName: Bankapp
                     tags:
                       - <+pipeline.variables.TAG>
