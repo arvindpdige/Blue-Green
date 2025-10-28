@@ -176,3 +176,8 @@ pipeline:
       description: ""
       required: true
       value: <+input>
+    - name: ns
+      type: String
+      description: ""
+      required: true
+      value: default
