@@ -91,8 +91,8 @@ pipeline:
                   identifier: BuildAndPushImageToGAR
                   spec:
                     connectorRef: account.gcpcloudaccountscope
-                    host: asia-south1-maven.pkg.dev
-                    projectID: harness-475313/gcp-mvn-snap-reg
+                    host: asia-south1-docker.pkg.dev
+                    projectID: harness-475313/gcp-docker-reg
                     imageName: bankapp
                     tags:
                       - <+pipeline.variables.TAG>
