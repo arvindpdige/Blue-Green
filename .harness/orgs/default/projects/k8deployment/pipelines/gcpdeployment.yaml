@@ -67,7 +67,7 @@ pipeline:
                     connectorRef: account.gcpcloudaccountscope
                     host: asia-south1-docker.pkg.dev
                     projectID: harness-475313/gcp-docker-reg
-                    imageName: Bankapp
+                    imageName: bankapp
                     tags:
                       - <+pipeline.variables.TAG>
                     caching: true
