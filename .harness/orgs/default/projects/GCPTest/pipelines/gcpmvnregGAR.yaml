@@ -85,3 +85,21 @@ pipeline:
                         # -Dgcp.project.id=harness-475313
 
                       echo "✅ JAR uploaded successfully!......"
+              - step:
+                  type: BuildAndPushGAR
+                  name: BuildAndPushImageToGAR
+                  identifier: BuildAndPushImageToGAR
+                  spec:
+                    connectorRef: account.gcpcloudaccountscope
+                    host: asia-south1-maven.pkg.dev
+                    projectID: harness-475313/gcp-mvn-snap-reg
+                    imageName: bankapp
+                    tags:
+                      - <+pipeline.variables.TAG>
+                    caching: true
+  variables:
+    - name: TAG
+      type: String
+      description: ""
+      required: true
+      value: <+input>
