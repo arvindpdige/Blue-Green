@@ -42,7 +42,7 @@ service:
           type: String
           description: ""
           required: true
-          value: prod
+          value: maven
   gitOpsEnabled: false
   orgIdentifier: default
   projectIdentifier: k8deployment
