@@ -90,7 +90,7 @@ pipeline:
                   name: BuildAndPushImageToGAR
                   identifier: BuildAndPushImageToGAR
                   spec:
-                    connectorRef: account.gcpcloudaccountscope
+                    connectorRef: gcpconntest
                     host: asia-south1-docker.pkg.dev
                     projectID: harness-475313/gcp-docker-reg
                     imageName: bankapp
