@@ -60,6 +60,23 @@ pipeline:
                       mvn clean compile install package -Dmaven.test.failure.ignore=true
                     imagePullPolicy: IfNotPresent
               - step:
+                  type: RunTests
+                  name: Junittests
+                  identifier: Junittests
+                  spec:
+                    connectorRef: org.Dockerpractice046651
+                    image: maven:latest
+                    language: Java
+                    buildTool: Maven
+                    args: clean test
+                    runOnlySelectedTests: true
+                    reports:
+                      type: JUnit
+                      spec:
+                        paths:
+                          - "**/*.xml"
+                    enableTestSplitting: true
+              - step:
                   type: GCSUpload
                   name: GCSUpload
                   identifier: GCSUpload
