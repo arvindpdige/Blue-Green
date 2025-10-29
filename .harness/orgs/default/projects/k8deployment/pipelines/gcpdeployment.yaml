@@ -64,6 +64,8 @@ pipeline:
                   spec:
                     connectorRef: account.Dockerhub
                     image: maven:3-openjdk-17
+                    envVariables:
+                      MAVEN_OPTS: "-Dmaven.repo.local=/harness/.m2/repository"
                     shell: Sh
                     command: |-
                       mvn -v
@@ -102,10 +104,10 @@ pipeline:
                     bucket: harness-bucket-01
                     key: maven-cache-{{ checksum "pom.xml" }}
                     sourcePaths:
-                      - /root/.m2/repository/
+                      - /harness/.m2/repository
                     archiveFormat: Tar
           sharedPaths:
-            - ~/.m2/repository/
+            - /harness/.m2/repository/
     - stage:
         name: canary
         identifier: canary
