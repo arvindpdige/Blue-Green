@@ -102,7 +102,7 @@ pipeline:
                     bucket: harness-bucket-01
                     key: maven-cache-{{ checksum "pom.xml" }}
                     sourcePaths:
-                      - ~/.m2/repository/
+                      - /root/.m2/repository/
                     archiveFormat: Tar
           sharedPaths:
             - ~/.m2/repository/
