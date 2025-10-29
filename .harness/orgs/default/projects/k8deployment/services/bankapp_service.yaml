@@ -17,7 +17,7 @@ service:
                   paths:
                     - deployment.yaml
                   repoName: Blue-Green
-                  branch: main
+                  branch: gcp-deploy
               skipResourceVersioning: false
               enableDeclarativeRollback: false
         - manifest:
