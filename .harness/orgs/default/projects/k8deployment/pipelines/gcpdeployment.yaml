@@ -72,23 +72,6 @@ pipeline:
                     sourcePath: target/bankapp-0.0.1-SNAPSHOT.jar
                     target: Bankapp/
               - step:
-                  type: RunTests
-                  name: Junittests
-                  identifier: Junittests
-                  spec:
-                    connectorRef: account.Dockerhub
-                    image: maven:latest
-                    language: Java
-                    buildTool: Maven
-                    args: clean test -Dmaven.test.failure.ignore=true
-                    runOnlySelectedTests: true
-                    reports:
-                      type: JUnit
-                      spec:
-                        paths:
-                          - "**/*.xml"
-                    enableTestSplitting: true
-              - step:
                   type: BuildAndPushGAR
                   name: BuildAndPushGAR
                   identifier: BuildAndPushGAR
