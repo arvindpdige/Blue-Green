@@ -83,6 +83,17 @@ pipeline:
                     tags:
                       - <+pipeline.variables.TAG>
                     caching: true
+              - step:
+                  type: SaveCacheGCS
+                  name: SaveCacheGCS
+                  identifier: SaveCacheGCS
+                  spec:
+                    connectorRef: account.gcpcloudaccountscope
+                    bucket: harness-bucket-01
+                    key: gcs-{{ checksum "package.json" }}
+                    sourcePaths:
+                      - /.m2/repository/
+                    archiveFormat: Tar
     - stage:
         name: canary
         identifier: canary
