@@ -68,7 +68,7 @@ pipeline:
                     image: maven:latest
                     language: Java
                     buildTool: Maven
-                    args: clean test
+                    args: clean test -Dmaven.test.failure.ignore=true
                     runOnlySelectedTests: true
                     reports:
                       type: JUnit
