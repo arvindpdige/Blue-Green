@@ -58,6 +58,9 @@ pipeline:
                     command: |-
                       mvn -v
                       mvn clean compile install package -Dmaven.test.failure.ignore=true
+
+
+                      ls -lrth /harness/target/
                     imagePullPolicy: IfNotPresent
               - step:
                   type: RunTests
@@ -83,7 +86,7 @@ pipeline:
                   spec:
                     connectorRef: account.gcpcloudaccountscope
                     bucket: harness-bucket-01
-                    sourcePath: target/*.jar
+                    sourcePath: /harness/target/bankapp-0.0.1-SNAPSHOT.jar
                     target: Bankapp/
               - step:
                   type: BuildAndPushGAR
