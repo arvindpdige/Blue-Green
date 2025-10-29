@@ -20,6 +20,7 @@ pipeline:
           caching:
             enabled: true
             override: true
+            paths: []
           buildIntelligence:
             enabled: true
           infrastructure:
@@ -32,6 +33,15 @@ pipeline:
               os: Linux
           execution:
             steps:
+              - step:
+                  type: RestoreCacheGCS
+                  name: RestoreCacheGCS
+                  identifier: RestoreCacheGCS
+                  spec:
+                    connectorRef: account.gcpcloudaccountscope
+                    bucket: harness-bucket-01
+                    key: maven-cache-{{ checksum "pom.xml" }}
+                    archiveFormat: Tar
               - step:
                   type: Gitleaks
                   name: Gitleaks
@@ -90,10 +100,12 @@ pipeline:
                   spec:
                     connectorRef: account.gcpcloudaccountscope
                     bucket: harness-bucket-01
-                    key: gcs-{{ checksum "package.json" }}
+                    key: maven-cache-{{ checksum "pom.xml" }}
                     sourcePaths:
-                      - /.m2/repository/
+                      - ~/.m2/repository/
                     archiveFormat: Tar
+          sharedPaths:
+            - ~/.m2/repository/
     - stage:
         name: canary
         identifier: canary
