@@ -60,6 +60,15 @@ pipeline:
                       mvn clean compile install package -Dmaven.test.failure.ignore=true
                     imagePullPolicy: IfNotPresent
               - step:
+                  type: GCSUpload
+                  name: GCSUpload
+                  identifier: GCSUpload
+                  spec:
+                    connectorRef: account.gcpcloudaccountscope
+                    bucket: harness-bucket-01
+                    sourcePath: target/*.jar
+                    target: Bankapp/
+              - step:
                   type: BuildAndPushGAR
                   name: BuildAndPushGAR
                   identifier: BuildAndPushGAR
