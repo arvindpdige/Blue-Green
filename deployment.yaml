@@ -68,7 +68,7 @@ spec:
     spec:
       containers:
       - name: bankapp
-        image: arvindpdige/bankapp:{{ .Values.TAG }} # Adjust the image tag for the blue version
+        image: asia-south1-docker.pkg.dev/harness-475313/gcp-docker-reg/bankapp:{{ .Values.TAG }} # Adjust the image tag for the blue version
         ports:
         - containerPort: 8080
         env:
