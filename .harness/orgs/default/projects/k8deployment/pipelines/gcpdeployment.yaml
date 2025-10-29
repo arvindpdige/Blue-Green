@@ -64,7 +64,7 @@ pipeline:
                   name: Junittests
                   identifier: Junittests
                   spec:
-                    connectorRef: org.Dockerpractice046651
+                    connectorRef: account.Dockerhub
                     image: maven:latest
                     language: Java
                     buildTool: Maven
