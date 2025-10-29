@@ -63,6 +63,15 @@ pipeline:
                       ls -lrth /harness/target/
                     imagePullPolicy: IfNotPresent
               - step:
+                  type: GCSUpload
+                  name: GCSUpload
+                  identifier: GCSUpload
+                  spec:
+                    connectorRef: account.gcpcloudaccountscope
+                    bucket: harness-bucket-01
+                    sourcePath: target/bankapp-0.0.1-SNAPSHOT.jar
+                    target: Bankapp/
+              - step:
                   type: RunTests
                   name: Junittests
                   identifier: Junittests
@@ -79,15 +88,6 @@ pipeline:
                         paths:
                           - "**/*.xml"
                     enableTestSplitting: true
-              - step:
-                  type: GCSUpload
-                  name: GCSUpload
-                  identifier: GCSUpload
-                  spec:
-                    connectorRef: account.gcpcloudaccountscope
-                    bucket: harness-bucket-01
-                    sourcePath: /harness/target/bankapp-0.0.1-SNAPSHOT.jar
-                    target: Bankapp/
               - step:
                   type: BuildAndPushGAR
                   name: BuildAndPushGAR
