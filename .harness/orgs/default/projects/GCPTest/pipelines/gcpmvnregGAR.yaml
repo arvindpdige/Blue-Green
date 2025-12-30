@@ -7,9 +7,10 @@ pipeline:
   properties:
     ci:
       codebase:
-        connectorRef: gitall
+        connectorRef: account.Github
         repoName: Blue-Green
         build: <+input>
+        sparseCheckout: []
   stages:
     - stage:
         name: Build
