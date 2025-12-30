@@ -34,6 +34,25 @@ pipeline:
           execution:
             steps:
               - step:
+                  name: UploadGAR
+                  identifier: UploadGAR
+                  template:
+                    templateRef: GAR_ALL_Upload
+                    versionLabel: v1
+                    templateInputs:
+                      type: Run
+                      spec:
+                        connectorRef: <+input>
+                        image: <+input>
+                        envVariables:
+                          artifact_type: <+input>.selectOneFrom(npm,maven)
+                          gcp_project: <+input>.selectOneFrom(harness-475313)
+                          gar_location: <+input>.selectOneFrom(asia-south1)
+                          gar_repo: <+input>.selectOneFrom(gcp-npm-reg,gcp-mvn-snap-reg,gcp-generic)
+                          artifact_name: <+input>
+                          artifact_version: <+input>
+                          artifact_Dir_Path: <+input>
+              - step:
                   type: Run
                   name: GCP_Auth
                   identifier: GCP_Auth
@@ -63,6 +82,9 @@ pipeline:
                       # export GOOGLE_APPLICATION_CREDENTIALS=/harness/gcp-key.json
                     envVariables:
                       GCP_KEY_JSON: <+secrets.getValue("gcp-sa")>
+                  when:
+                    stageStatus: Success
+                    condition: "false"
               - step:
                   type: Run
                   name: Build_And_Push_To_Gar
@@ -85,6 +107,9 @@ pipeline:
                         # -Dgcp.project.id=harness-475313
 
                       echo "✅ JAR uploaded successfully!......"
+                  when:
+                    stageStatus: Success
+                    condition: "false"
               - step:
                   type: BuildAndPushGAR
                   name: BuildAndPushImageToGAR
@@ -97,6 +122,9 @@ pipeline:
                     tags:
                       - <+pipeline.variables.TAG>
                     caching: true
+                  when:
+                    stageStatus: Success
+                    condition: "false"
   variables:
     - name: TAG
       type: String
