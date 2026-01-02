@@ -49,7 +49,7 @@ pipeline:
                           artifact_type: <+input>.selectOneFrom(npm,maven)
                           gcp_project: <+input>.selectOneFrom(harness-475313)
                           gar_location: <+input>.selectOneFrom(asia-south1)
-                          gar_repo: <+input>.selectOneFrom(gcp-npm-reg,gcp-mvn-snap-reg,gcp-generic)
+                          gar_repo: <+input>.selectOneFrom(gcp-npm-reg,gcp-mvn-snap-reg,gcp-generic,mvn-gcp-reg)
                           artifact_name: <+input>
                           artifact_version: <+input>
                           artifact_Dir_Path: <+input>
