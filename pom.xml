@@ -91,10 +91,10 @@
       <id>artifact-registry</id>
       <url>artifactregistry://asia-south1-maven.pkg.dev/harness-475313/mvn-gcp-reg</url>
     </repository>
-    <snapshotRepository>
+    <!-- <snapshotRepository>
       <id>artifact-registry</id>
       <url>artifactregistry://asia-south1-maven.pkg.dev/harness-475313/gcp-mvn-snap-reg</url>
-    </snapshotRepository>
+    </snapshotRepository> -->
   </distributionManagement>
 
   <repositories>
@@ -108,7 +108,7 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
-    <repository>
+    <!-- <repository>
       <id>artifact-registry</id>
       <url>artifactregistry://asia-south1-maven.pkg.dev/harness-475313/gcp-mvn-snap-reg</url>
       <releases>
@@ -117,7 +117,7 @@
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
-    </repository>
+    </repository> -->
   </repositories>
 	
 </project>
