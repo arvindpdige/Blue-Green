@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>bankapp</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>bankapp</name>
 	<description>Banking Web Application</description>
 	<url/>
@@ -87,6 +87,10 @@
 	</build>
 
 	<distributionManagement>
+	<repository>
+      <id>artifact-registry</id>
+      <url>artifactregistry://asia-south1-maven.pkg.dev/harness-475313/mvn-gcp-reg</url>
+    </repository>
     <snapshotRepository>
       <id>artifact-registry</id>
       <url>artifactregistry://asia-south1-maven.pkg.dev/harness-475313/gcp-mvn-snap-reg</url>
@@ -94,6 +98,16 @@
   </distributionManagement>
 
   <repositories>
+    <repository>
+      <id>artifact-registry</id>
+      <url>artifactregistry://asia-south1-maven.pkg.dev/harness-475313/mvn-gcp-reg</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
     <repository>
       <id>artifact-registry</id>
       <url>artifactregistry://asia-south1-maven.pkg.dev/harness-475313/gcp-mvn-snap-reg</url>
